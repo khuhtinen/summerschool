@@ -6,5 +6,4 @@
 #SBATCH -p small
 #SBATCH -t 5
 #SBATCH --reservation=summer_school
-
-
+aprun -n 24 /homeappl/home/training059/git/summerschool/unix/prog
