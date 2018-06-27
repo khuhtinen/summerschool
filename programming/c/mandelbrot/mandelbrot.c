@@ -7,7 +7,14 @@ typedef struct {
 } complex; 
 
 
+complex *square(complex * z) {
+  
+  complex * res;
+  res->real = z->real*z->real - z->imag*z->imag;
+  res->imag = 2*z->real*z->imag;
 
+  return res;
+}
 
 int main() {
   
