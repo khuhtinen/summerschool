@@ -43,7 +43,9 @@ int main(void)
     // Evaluate the Laplacian
     for(i = 1; i<NX-1; i++) {
       for(j = 1; j<NY-1; j++) {
-#ERROR: TODO
+	laplacian[i][j] = 
+	  (array[i-1][j] - 2*array[i][j] + array[i+1][j])/(DX*DX)
+	  +(array[i][j-1] - 2*array[i][j] + array[i][j+1])/(DY*DY);
       }
     }
 
