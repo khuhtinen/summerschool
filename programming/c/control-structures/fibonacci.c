@@ -14,11 +14,11 @@ int main(int argc, char *argv[])
     printf("\t0\t%lu\n\t1\t%lu\n",f0,f1);
 
     while(n < 100) {
-      n++;
       printf("\t%d\t%lu\n",n,f2);
       f0 = f1;
       f1 = f2;
       f2 = f0 + f1;
+      n++;
     }
 
     return 0;
