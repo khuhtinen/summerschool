@@ -39,12 +39,54 @@ void iterate(complex *c, int N) {
     add(z,c);
   }
 
+  c->real = z->real;
+  c->imag = z->imag;
+
+}
+
+double norm(complex *z) {
+  return (z->real)*(z->real) + (z->imag)*(z->imag);
+}
+
+/*
+  Produce table approximating the Mandelbrot set
+ */
+void write_table(int ** array, int nx, int ny) {
+
+  complex *c;
+
+  int i,j;
+  double x,y;
+  x = y = -2.0;
+
+  for(i=0;i<nx;i++) {
+    for(j=0;j<ny;j++) {
+      c->real = x;
+      c->imag = y;
+
+      iterate(c,100);
+
+      if(norm(c) < 100) {
+	array[i][j] = 1;
+      } else {
+	array[i][j] = 0;
+      }
+
+      x+= 4.0/((double) nx);
+      y+= 4.0/((double) ny);
+    }
+  }
+
 }
 
 
-
-
 int main() {
+  
+  int nx = 100;
+  int ny = 100;
+
+  int array[nx][ny];
+
   
 
   return 0;
