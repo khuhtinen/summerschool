@@ -40,7 +40,7 @@ void print_field(field *f)
     // TODO: Fix the call to png writing. Note that since we now have a
     // dynamically allocated 2D array, we need to pass on a pointer to the
     // first element (=row) of the array instead of the array itself.
-    error_code = save_png(..., ..., ..., "dynamic_array.png", 'c');
+    error_code = save_png((double *) (f->data)[0], f->nx + 2, f->ny + 2, "dynamic_array.png", 'c');
     if (error_code == 0) {
         printf("Wrote output file dynamic_array.png\n");
     } else {
