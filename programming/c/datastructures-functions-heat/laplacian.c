@@ -29,22 +29,23 @@ int main(void)
         laplacian[0][j] = laplacian[NX - 1][j] = 0.0;
     }
 
-    // Initial conditions for top and bottom
+    // Initial conditions for left and right
     for (i = 0; i < NX; i++) {
-        array[i][0] = 30.0;
-        array[i][NY - 1] = -10.0;
+        array[i][0] = 20.0;
+        array[i][NY - 1] = 70.0;
     }
-    // left and right
+    // top and bottom
     for (j = 0; j < NY; j++) {
-        array[0][j] = 15.0;
-        array[NX - 1][j] = -25.0;
+        array[0][j] = 85.0;
+        array[NX - 1][j] = 5.0;
     }
 
     // Evaluate the Laplacian
-    // *INDENT-OFF*
-#error Add the missing part
-
-    // *INDENT-ON*
+    for(i = 1; i<NX-1; i++) {
+      for(j = 1; j<NY-1; j++) {
+#ERROR: TODO
+      }
+    }
 
     // Call the png writer routine
     error_code = save_png((double *) laplacian, NX, NY, "datastructures_functions_heat-a_b.png", 'c');
