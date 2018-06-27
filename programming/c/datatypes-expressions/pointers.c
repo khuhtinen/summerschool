@@ -8,6 +8,11 @@ int main(int argc, char *argv[])
     // Evaluate expressions using both the original and the pointer variable
     // and investigate the value / value pointed to
 
+    int *p = &a;
+
+    a = 5;
+    printf("Value of a: %d, p: %d\n",a,*p);
+    
 
     return 0;
 }
