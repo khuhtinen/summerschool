@@ -76,8 +76,8 @@ int main(int argc, char *argv[])
     init_field(&temperature, nx, ny);
     print_field(&temperature);
 
-    free(matrix[0]);
-    free(matrix);
+    free(temperature.data[0]);
+    free(temperature.data);
 
     return 0;
 }
