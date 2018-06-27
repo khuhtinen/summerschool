@@ -15,8 +15,8 @@ int main(void)
     double laplacian[NX][NY];
 
     // First initalize the inner values to zero
-    for (i = 1; i < NX - 2; i++) {
-        for (j = 1; j < NY - 2; j++) {
+    for (i = 1; i < NX - 1; i++) {
+        for (j = 1; j < NY - 1; j++) {
             array[i][j] = 0.0;
         }
     }
