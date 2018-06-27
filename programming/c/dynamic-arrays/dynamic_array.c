@@ -65,15 +65,19 @@ int main(int argc, char *argv[])
     nx = atoi(argv[1]);
     ny = atoi(argv[2]);
 
-    // TODO: Allocate memory for a 2D array (nx,ny). Remember to allocate
-    // space also for a ghost layer around the real data.
+    temperature.data = (double **) malloc((nx + 2) * sizeof(double *));
+    temperature.data[0] = (double *) malloc((nx + 2) * (ny + 2) * sizeof(double));
+
+    for(i = 0; i < nx + 2; i++) {
+      temperature.data[i] = temperature.data[0] + i * (ny + 2);
+    }
 
     // Initialize field and print out the result
     init_field(&temperature, nx, ny);
     print_field(&temperature);
 
-    // Free memory allocation
-    // TODO: Free memory allocations
+    free(matrix[0]);
+    free(matrix);
 
     return 0;
 }
