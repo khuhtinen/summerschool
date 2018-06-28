@@ -5,8 +5,9 @@ public:
   // Two member variables, a and b
   int a, b;
 
-  // TODO: add here the member function
-  //       described in the exercise
+  void print() const {
+    printf("a=%d, b=%d\n",a,b);
+  };
   
 };
 
@@ -16,8 +17,11 @@ int main(void)
   demo.a = 10;
   demo.b = 20;
 
-  // TODO: add here a call to the member
-  //       function
+  demo.print();
   
+  demo.a = 11;
+  
+  demo.print();
+
   return 0;
 }
