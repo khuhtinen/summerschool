@@ -1,9 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "field.h"
+#include "pngwriter.h"
 
-#define DX 0.01
-#define DY 0.01
 
 
 void init_field(field *f, int nx, int ny) {

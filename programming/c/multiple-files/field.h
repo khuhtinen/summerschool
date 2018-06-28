@@ -1,8 +1,14 @@
 #ifndef FIELD_H_
 #define FIELD_H_
 
+#include <stdio.h>
+#include <stdlib.h>
+
 #define NX 256
 #define NY 256
+#define DX 0.01
+#define DY 0.01
+
 
 // Field structure definition
 typedef struct {
