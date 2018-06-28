@@ -85,8 +85,32 @@ void generate_field(field *temperature)
     temperature->data =
         malloc_2d(temperature->nx + 2, temperature->ny + 2);
 
-    /* TODO: Initialize the values of temperature */
-#error Add field initialization
+    /* Source*/
+    radius = temperature->nx / 6.0;
+    for(i=0;i<temperature->nx + 2; i++) {
+      for(j=0;j<temperature->ny + 2; j++) {
+	dx = i - temperature->nx/2 + 1;
+	dy = j - temperature->ny/2 + 1;
+	if(dx * dx + dy * dy < radius * radius) {
+	  temperature->data[i][j] = 5.0;//in circle
+	} else {
+	  temperature->data[i][j] = 65.0; //outside
+	}
+      }
+    }
+    
+
+    //Boundary conditions
+    for(i=0; i<temperature->nx + 2; i++) {
+      temperature->data[i][0] = 20.0;
+      temperature->data[i][temperature->ny + 1] = 70.0;
+    }
+
+    for(i=0; i<temperature->ny + 2; i++) {
+      temperature->data[0][i] = 85.0;
+      temperature->data[temperature->nx+1][i] = 5.0;
+    }
+    
 
 }
 
