@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define NX 500
-#define NY 500
+#define NX 1000
+#define NY 1000
 
 typedef struct {
   double real;
@@ -27,29 +27,31 @@ void add(complex * z, complex * c) {
 
 }
 
-/*
-  Computes the N:th iterate of 0 for the polynomial z^2+c.
- */
-void iterate(complex *c, int N) {
-
-  int i;
-  complex z;
-  z.real = 0.0;
-  z.imag = 0.0;
-
-  for(i=0; i<N; i++) {
-    square(&z);
-    add(&z,c);
-  }
-
-  c->real = z.real;
-  c->imag = z.imag;
-
-}
 
 double norm(complex *z) {
   return (z->real)*(z->real) + (z->imag)*(z->imag);
 }
+
+/*
+  Returns the last iterate that is not nan
+ */
+int iterate(complex *c, int N) {
+
+  int i = 0;
+  complex z;
+  z.real = 0.0;
+  z.imag = 0.0;
+
+  do {
+    square(&z);
+    add(&z,c);
+    i++;
+  } while(!isnan(norm(&z))&&(i<N));
+
+  return i;
+
+}
+
 
 /*
   Produce table approximating the Mandelbrot set
@@ -66,18 +68,13 @@ void write_table(double array[NX][NY]) {
   double x;
 
   for(i=0;i<NY;i++) {
-    x = -2.0;
+    x = -2.5;
     for(j=0;j<NX;j++) {
       c.real = x;
       c.imag = y;
 
-      iterate(&c,200);
+      array[i][j] = (double) iterate(&c,200);
 
-      if(isnan(norm(&c))) {
-	array[i][j] = 0.0;
-      } else {
-	array[i][j] = 100.0;
-      }
 
       x+= 4.0/((double) NY);
     }
@@ -105,9 +102,19 @@ void draw_result(double array[NX][NY]) {
 int main() {
   
   double array[NX][NY];
-  int i,j;
 
   write_table(array);
+
+  /*
+  int i,j;
+  for(i=0;i<NX;i++) {
+    for(j=0;j<NY;j++) {
+      printf("%d\t",(int) array[i][j]);
+    }
+    printf("\n");
+  }
+  */
+  
   draw_result(array);
 
   return 0;
