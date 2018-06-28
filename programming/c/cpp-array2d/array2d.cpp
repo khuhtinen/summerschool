@@ -26,6 +26,29 @@ void print_field( Matrix<double>& f ) {
 }
 
 
+void initialize_matrix(Matrix<double> &m) {
+
+  int i,j;
+
+  //initialize interior
+  for(i=1;i<m.nx-1;i++) {
+    for(j=1;j<m.ny-1;j++) {
+      m(i,j) = 0.0;
+    }
+  }
+
+  //boundary conditions
+  for(i=0;i<m.nx;i++) {
+    m(i,0) = 85.0;
+    m(i,m.ny-1) = 5.0;
+  }
+
+  for(j=0;j<m.ny;j++) {
+    m(0,j) = 20.0;
+    m(m.nx-1,j) = 70.0;
+  }
+
+}
 
 
 // main function
@@ -33,6 +56,7 @@ int main()
 {
 
   // TODO create empty 2d matrix called mat
+  Matrix<double> mat(258,258);
 
   // TODO implement initialization function
 
