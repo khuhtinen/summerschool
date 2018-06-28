@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define NX 100
-#define NY 100
+#define NX 500
+#define NY 500
 
 typedef struct {
   double real;
@@ -62,16 +62,16 @@ void write_table(double array[NX][NY]) {
 
 
   int i,j;
-  double x = -2.0;
-  double y;
+  double y = -2.0;
+  double x;
 
-  for(i=0;i<NX;i++) {
-    y = -2.0;
-    for(j=0;j<NY;j++) {
+  for(i=0;i<NY;i++) {
+    x = -2.0;
+    for(j=0;j<NX;j++) {
       c.real = x;
       c.imag = y;
 
-      iterate(&c,100);
+      iterate(&c,200);
 
       if(isnan(norm(&c))) {
 	array[i][j] = 0.0;
@@ -79,9 +79,9 @@ void write_table(double array[NX][NY]) {
 	array[i][j] = 100.0;
       }
 
-      y+= 4.0/((double) NY);
+      x+= 4.0/((double) NY);
     }
-    x+= 4.0/((double) NX);
+    y+= 4.0/((double) NX);
   }
 
 }
