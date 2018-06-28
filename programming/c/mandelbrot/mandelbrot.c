@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define NX 10
-#define NY 10
+#define NX 100
+#define NY 100
 
 typedef struct {
   double real;
@@ -54,7 +54,7 @@ double norm(complex *z) {
 /*
   Produce table approximating the Mandelbrot set
  */
-void write_table(int array[NX][NY]) {
+void write_table(double array[NX][NY]) {
 
   complex c;
   c.real = 0.0;
@@ -63,35 +63,52 @@ void write_table(int array[NX][NY]) {
 
   int i,j;
   double x = -2.0;
-  double y = -2.0;
+  double y;
 
   for(i=0;i<NX;i++) {
+    y = -2.0;
     for(j=0;j<NY;j++) {
       c.real = x;
       c.imag = y;
 
       iterate(&c,100);
 
-      if(norm(&c) < 100.0) {
-	array[i][j] = 1;
+      if(isnan(norm(&c))) {
+	array[i][j] = 0.0;
       } else {
-	array[i][j] = 0;
+	array[i][j] = 100.0;
       }
 
-      x+= 4.0/((double) NX);
       y+= 4.0/((double) NY);
     }
+    x+= 4.0/((double) NX);
   }
+
+}
+
+void draw_result(double array[NX][NY]) {
+  
+  int error_code;
+
+  // Call the png writer routine
+  error_code = save_png((double *) array, NX, NY, "mandelbrot_set.png",'c');
+
+  if (error_code == 0) {
+        printf("Wrote the output file mandelbrot_set.png\n");
+    } else {
+        printf("Error while writing output file mandelbrot_set.png\n");
+    }
 
 }
 
 
 int main() {
   
-  int array[NX][NY];
+  double array[NX][NY];
   int i,j;
 
   write_table(array);
+  draw_result(array);
 
   return 0;
 }
