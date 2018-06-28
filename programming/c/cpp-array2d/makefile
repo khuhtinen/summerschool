@@ -27,7 +27,7 @@ $(EXE): $(OBJS)
 	$(CC) $(CCFLAGS) -c $< -o $@
 
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) -std=c++14 -c $< -o $@
+	$(CXX) $(CXXFLAGS) -std=c++11 -c $< -o $@
 
 clean:
 	-/bin/rm -f $(EXE) a.out *.o
