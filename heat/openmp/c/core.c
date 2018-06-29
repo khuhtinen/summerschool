@@ -18,7 +18,6 @@ void evolve(field *curr, field *prev, double a, double dt)
      * are not updated. */
     dx2 = prev->dx * prev->dx;
     dy2 = prev->dy * prev->dy;
-    
 #pragma omp parallel for private(i,j)
     for (i = 1; i < curr->nx + 1; i++) {
         for (j = 1; j < curr->ny + 1; j++) {
@@ -31,7 +30,6 @@ void evolve(field *curr, field *prev, double a, double dt)
                                  prev->data[i][j - 1]) / dy2);
         }
     }
-    
 }
 
 
