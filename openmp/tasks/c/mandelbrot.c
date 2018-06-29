@@ -68,15 +68,13 @@ void mandelbrot_block(int *iter_counts, int w, int h, complex cmin,
                       complex cmax, int x0, int y0, int d, int depth)
 {
 
-// TODO Parallelize the recursive function call
-// with OpenMP tasks
-
     int block_size = d / SUBDIV;
     if (depth + 1 < MAX_DEPTH && block_size > MIN_SIZE) {
         // Subdivide recursively
         for (int i = 0; i < SUBDIV; i++) {
             for (int j = 0; j < SUBDIV; j++) {
-                mandelbrot_block(iter_counts, w, h, cmin, cmax,
+#pragma omp task
+	      mandelbrot_block(iter_counts, w, h, cmin, cmax,
                                  x0 + i * block_size, y0 + j * block_size,
                                  d / SUBDIV, depth + 1);
             }
@@ -104,14 +102,16 @@ int main(int argc, char **argv)
     int pic_bytes = w * h * sizeof(int);
     iter_counts = (int *)malloc(pic_bytes);
 
-    cmin = -1.5 + -1.0 * I;
-    cmax = 0.5 + 1.0 * I;
+    cmin = -2.0 + -1.25 * I;
+    cmax = 0.5 + 1.25 * I;
 
     double t1 = omp_get_wtime();
 
 // TODO create parallel region. How many threads should be calling
 // mandelbrot_block in this uppermost level?
 
+#pragma omp parallel
+#pragma omp single
     {
         mandelbrot_block(iter_counts, w, h, cmin, cmax,
                          0, 0, w, 1);
