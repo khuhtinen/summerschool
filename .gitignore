@@ -5,6 +5,7 @@
 *.pgm
 \#*
 *~ 
+*.err
 
 #ignore default binary name
 a.out
