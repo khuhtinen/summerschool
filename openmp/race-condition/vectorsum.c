@@ -14,15 +14,36 @@ int main(void)
     }
 
     sumex = (long) NX * (NX + 1) / ((long) 2);
-    printf("Arithmetic sum formula (exact):                  %ld\n",
+    printf("Arithmetic sum formula (exact): \t %ld\n",
            sumex);
 
     sum = 0.0;
-#pragma omp parallel for default(shared) private(i) reduction(+:sum)
-    for (i = 0; i < NX; i++) {
-        sum += vecA[i];
-    }
-    printf("Sum: %ld\n", sum);
 
+#pragma omp parallel for shared(sum,vecA) private(i) reduction(+:sum)
+    for (i = 0; i < NX; i++) {
+      sum += vecA[i];
+    }
+    printf("With reduction: \t %ld\n", sum);
+    
+    sum = 0.0;
+    
+#pragma omp parallel shared(sum,vecA) private(i,psum)
+    {
+      psum = 0.0;
+#pragma omp for
+      for(i=0; i<NX; i++) {
+	psum += vecA[i];
+      }
+#pragma omp critical(sum)
+      {
+      sum += psum;
+      }
+    }
+  
+    printf("With critical: \t %ld\n", sum);
+    
     return 0;
+
+    
+
 }
