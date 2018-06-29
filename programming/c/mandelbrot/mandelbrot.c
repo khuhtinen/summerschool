@@ -33,7 +33,7 @@ double norm(complex *z) {
 }
 
 /*
-  Returns the last iterate that is not nan
+  Returns the last iterate that is not larger than 2
  */
 int iterate(complex *c, int N) {
 
@@ -46,7 +46,7 @@ int iterate(complex *c, int N) {
     square(&z);
     add(&z,c);
     i++;
-  } while(!isnan(norm(&z))&&(i<N));
+  } while((norm(&z)<4)&&(i<N));
 
   return i;
 
