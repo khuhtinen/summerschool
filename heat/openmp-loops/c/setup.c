@@ -87,6 +87,7 @@ void generate_field(field *temperature)
 
     /* Radius of the source disc */
     radius = temperature->nx / 6.0;
+#pragma omp parallel for private(i,j,dx,dy)
     for (i = 0; i < temperature->nx + 2; i++) {
         for (j = 0; j < temperature->ny + 2; j++) {
             /* Distances of point i, j from the origin */
@@ -101,11 +102,13 @@ void generate_field(field *temperature)
     }
 
     /* Boundary conditions */
+#pragma omp parallel for private(i)
     for (i = 0; i < temperature->nx + 2; i++) {
         temperature->data[i][0] = 20.0;
         temperature->data[i][temperature->ny + 1] = 70.0;
     }
 
+#pragma omp parallel for private(j)
     for (j = 0; j < temperature->ny + 2; j++) {
         temperature->data[0][j] = 85.0;
         temperature->data[temperature->nx + 1][j] = 5.0;
