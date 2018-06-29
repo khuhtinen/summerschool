@@ -82,7 +82,7 @@ int main()
   double dy = 0.01;
 
   // TODO implement function to compute Laplacian of mat
-  
+  laplacian(mat,dx,dy);
 
   print_field(mat);
 
