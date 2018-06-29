@@ -14,7 +14,7 @@ CXXFLAGS=-O2 -Wall
 LIBS=-lpng 
 endif
 
-EXE=array2d
+EXE=array2d.out
 OBJS=array2d.o pngwriter.o
 
 all: $(EXE)

@@ -24,7 +24,7 @@ LDFLAGS=
 LIBS=-lpng
 endif
 
-EXE=heat_serial
+EXE=heat_serial.out
 OBJS=core.o setup.o utilities.o io.o main.o
 OBJS_PNG=$(COMMONDIR)/pngwriter.o
 
