@@ -50,6 +50,23 @@ void initialize_matrix(Matrix<double> &m) {
 
 }
 
+void laplacian(Matrix<double> &m, double dx, double dy) {
+
+  int i,j;
+
+  Matrix<double> lap(m.nx,m.ny);
+
+  for(i=1;i<m.nx-1;i++) {
+    for(j=1;j<m.ny-1;j++) {
+      lap(i,j) = ( m(i-1,j) - 2*m(i,j) + m(i+1,j) ) / (dx*dx)
+	+ (m(i,j-1) - 2*m(i,j) + m(i,j+1)) / (dy*dy);
+    }
+  }
+
+  m = lap;
+
+}
+
 
 // main function
 int main() 
@@ -59,13 +76,13 @@ int main()
   Matrix<double> mat(258,258);
 
   // TODO implement initialization function
-
+  initialize_matrix(mat);
 
   double dx = 0.01;
   double dy = 0.01;
 
   // TODO implement function to compute Laplacian of mat
-
+  
 
   print_field(mat);
 
