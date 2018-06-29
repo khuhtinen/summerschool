@@ -14,17 +14,18 @@ int main(void)
         vecB[i] = vecA[i] * vecA[i];
     }
 
-    /* TODO:
-     *   Implement here a parallelized version of vector addition,
-     *   vecC = vecA + vecB
-     */
-
+    #pragma omp parallel for default(shared) private(i)
+    for(i = 0; i < NX; i++) {
+      vecC[i] = vecA[i] + vecB[i];
+    }
+    
+    
     sum = 0.0;
     /* Compute the check value */
     for (i = 0; i < NX; i++) {
-        sum += vecC[i];
+      sum += vecC[i];
     }
-    printf("Reduction sum: %18.16f\n", sum);
-
+    printf("\nReduction sum: %18.16f\n", sum);
+    
     return 0;
 }
