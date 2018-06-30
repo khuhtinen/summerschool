@@ -9,9 +9,11 @@ int main(int argc, char *argv[]) {
   
   MPI_Comm_size(MPI_COMM_WORLD,&N);
   MPI_Comm_rank(MPI_COMM_WORLD,&n);
+  
+  printf("Hello world! ");
 
   if(n%2==0)
-    printf("Hello world, from thread %d/%d\n",n,N);
+    printf("I'm thread %d/%d.\n",n,N);
   else
     printf("I'm %d. I'm odd.\n",n);
 
