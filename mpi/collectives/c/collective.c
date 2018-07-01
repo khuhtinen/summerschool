@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
         MPI_Abort(MPI_COMM_WORLD, -1);
     }
 
+    if(rank==0) printf("\na)\n");
     /* Initialize message buffers */
     init_buffers(sendbuf, recvbuf, 2 * NTASKS);
 
@@ -35,10 +36,28 @@ int main(int argc, char *argv[])
 
     /* TODO: use a single collective communication call (and maybe prepare
      *       some parameters for the call) */
+    MPI_Bcast(sendbuf, 8, MPI_INT,0,MPI_COMM_WORLD);
 
+    
     /* Print data that was received */
     /* TODO: add correct buffer */
-    print_buffers(printbuf, ..., 2 * NTASKS);
+    print_buffers(printbuf, sendbuf, 2 * NTASKS);
+
+    
+    //printf("\nb)\n");
+    /* Initialize message buffers */
+    //init_buffers(sendbuf, recvbuf, 2 * NTASKS);
+
+    /* Print data that will be sent */
+    //print_buffers(printbuf, sendbuf, 2 * NTASKS);
+
+    /* TODO: use a single collective communication call (and maybe prepare
+     *       some parameters for the call) */
+    //MPI_Bcast(sendbuf, 8, MPI_INT,0,MPI_COMM_WORLD);
+    
+    /* Print data that was received */
+    /* TODO: add correct buffer */
+    //print_buffers(printbuf, sendbuf, 2 * NTASKS);
 
     MPI_Finalize();
     return 0;
