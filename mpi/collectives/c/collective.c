@@ -78,6 +78,23 @@ int main(int argc, char *argv[])
     /* TODO: add correct buffer */
     print_buffers(printbuf, recvbuf, 2 * NTASKS);
 
+
+
+    if(rank==0) printf("\nd)\n");
+    /* Initialize message buffers */
+    init_buffers(sendbuf, recvbuf, 2 * NTASKS);
+
+    /* Print data that will be sent */
+    print_buffers(printbuf, sendbuf, 2 * NTASKS);
+
+    /* TODO: use a single collective communication call (and maybe prepare
+     *       some parameters for the call) */
+    MPI_Alltoall(sendbuf,2,MPI_INT,recvbuf,2,MPI_INT,MPI_COMM_WORLD);
+    
+    /* Print data that was received */
+    /* TODO: add correct buffer */
+    print_buffers(printbuf, recvbuf, 2 * NTASKS);
+
     
     MPI_Finalize();
     return 0;
