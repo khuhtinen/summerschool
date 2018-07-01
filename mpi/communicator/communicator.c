@@ -14,8 +14,6 @@ int main(int argc, char *argv[])
     int sendbuf[2 * NTASKS], recvbuf[2 * NTASKS];
     int printbuf[2 * NTASKS * NTASKS];
 
-    MPI_Comm sub_comm;
-
     MPI_Init(&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &ntasks);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -48,8 +46,6 @@ int main(int argc, char *argv[])
 
     /* Do the reduction */
     MPI_Reduce(sendbuf,recvbuf,8,MPI_INT,MPI_SUM,0,mycomm);
-
-    MPI_Comm_free(&mycomm);
 
     print_buffers(printbuf,recvbuf,2*NTASKS);
     
