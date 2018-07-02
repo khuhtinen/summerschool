@@ -33,16 +33,18 @@ void initialize(int argc, char *argv[], field *current,
 
     *nsteps = NSTEPS;
 
-    switch (argc) {
-    case 1:
+#pragma omp single
+    {
+      switch (argc) {
+      case 1:
         /* Use default values */
         break;
-    case 2:
+      case 2:
         /* Read initial field from a file */
         strncpy(input_file, argv[1], 64);
         read_file = 1;
         break;
-    case 3:
+      case 3:
         /* Read initial field from a file */
         strncpy(input_file, argv[1], 64);
         read_file = 1;
@@ -50,27 +52,32 @@ void initialize(int argc, char *argv[], field *current,
         /* Number of time steps */
         *nsteps = atoi(argv[2]);
         break;
-    case 4:
+      case 4:
         /* Field dimensions */
         rows = atoi(argv[1]);
         cols = atoi(argv[2]);
         /* Number of time steps */
         *nsteps = atoi(argv[3]);
         break;
-    default:
+      default:
         printf("Unsupported number of command line arguments\n");
         exit(-1);
+      }
     }
 
     if (read_file) {
-        read_field(current, previous, input_file, parallel);
+#pragma omp single
+      read_field(current, previous, input_file, parallel);
     } else {
+#pragma omp single
+      {
         parallel_setup(parallel, rows, cols);
         set_field_dimensions(current, rows, cols, parallel);
         set_field_dimensions(previous, rows, cols, parallel);
-        generate_field(current, parallel);
-        allocate_field(previous);
-        copy_field(current, previous);
+      }
+      generate_field(current, parallel);
+      allocate_field(previous);
+      copy_field(current, previous);
     }
 }
 
@@ -90,7 +97,7 @@ void generate_field(field *temperature, parallel_data *parallel)
 
     /* Radius of the source disc */
     radius = temperature->nx_full / 6.0;
-#pragma omp parallel for private(i,j,dx,dy)
+#pragma omp for private(i,j,dx,dy)
     for (i = 0; i < temperature->nx + 2; i++) {
         for (j = 0; j < temperature->ny + 2; j++) {
             /* Distance of point i, j from the origin */
@@ -106,20 +113,20 @@ void generate_field(field *temperature, parallel_data *parallel)
     }
 
     /* Boundary conditions */
-#pragma omp parallel for private(i)
+#pragma omp for private(i)
     for (i = 0; i < temperature->nx + 2; i++) {
         temperature->data[i][0] = 20.0;
         temperature->data[i][temperature->ny + 1] = 70.0;
     }
 
     if (parallel->rank == 0) {
-#pragma omp parallel for private(j)
+#pragma omp for private(j)
         for (j = 0; j < temperature->ny + 2; j++) {
             temperature->data[0][j] = 85.0;
         }
     } else if (parallel->rank == parallel->size - 1) {
-#pragma omp parallel for private(j)
-      for (j = 0; j < temperature->ny + 2; j++) {
+#pragma omp for private(j)
+        for (j = 0; j < temperature->ny + 2; j++) {
             temperature->data[temperature->nx + 1][j] = 5.0;
         }
     }

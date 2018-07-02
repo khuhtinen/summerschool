@@ -5,6 +5,7 @@
 #include <string.h>
 #include <time.h>
 #include <mpi.h>
+#include <omp.h>
 
 #include "heat.h"
 
@@ -27,43 +28,45 @@ int main(int argc, char **argv)
 
     double start_clock;        //!< Time stamps
 
-    int provided;
+    int nthread;
     
-        
-    MPI_Init_thread(&argc, &argv,MPI_THREAD_FUNNELED,&provided);
+    MPI_Init(&argc, &argv);
 
-    if (provided < MPI_THREAD_FUNNELED) {
-      printf("MPI does not support MPI_THREAD_FUNNELED\n");
-      MPI_Abort(MPI_COMM_WORLD, -1);
-      return 0;
-    }
+#pragma omp parallel private(iter)
+    {
+      initialize(argc, argv, &current, &previous, &nsteps, &parallelization);
 
+      nthread = omp_get_thread_num();
+      
+#pragma omp single
+      {
+	/* Output the initial field */
+	write_field(&current, 0, &parallelization);
+	
+	/* Largest stable time step */
+	dx2 = current.dx * current.dx;
+	dy2 = current.dy * current.dy;
+	dt = dx2 * dy2 / (2.0 * a * (dx2 + dy2));
+	
+	/* Get the start time stamp */
+	start_clock = MPI_Wtime();
+      }
 
-    initialize(argc, argv, &current, &previous, &nsteps, &parallelization);
-
-    /* Output the initial field */
-    write_field(&current, 0, &parallelization);
-
-    /* Largest stable time step */
-    dx2 = current.dx * current.dx;
-    dy2 = current.dy * current.dy;
-    dt = dx2 * dy2 / (2.0 * a * (dx2 + dy2));
-
-    /* Get the start time stamp */
-    start_clock = MPI_Wtime();
-
-    /* Time evolve */
-    for (iter = 1; iter < nsteps; iter++) {
-        exchange(&previous, &parallelization);
+      /* Time evolve */
+      for (iter = 1; iter < nsteps; iter++) {
+        exchange(&previous, &parallelization,nthread);
         evolve(&current, &previous, a, dt);
         if (iter % image_interval == 0) {
-            write_field(&current, iter, &parallelization);
+#pragma omp single
+	  write_field(&current, iter, &parallelization);
         }
         /* Swap current field so that it will be used
-            as previous for next iteration step */
+	   as previous for next iteration step */
+#pragma omp single
         swap_fields(&current, &previous);
+      }
     }
-
+    
     /* Determine the CPU time used for the iteration */
     if (parallelization.rank == 0) {
         printf("Iteration took %.3f seconds.\n", (MPI_Wtime() - start_clock));

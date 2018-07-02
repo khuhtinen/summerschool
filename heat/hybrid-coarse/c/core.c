@@ -9,21 +9,24 @@
 #include "heat.h"
 
 /* Exchange the boundary values */
-void exchange(field *temperature, parallel_data *parallel)
+void exchange(field *temperature, parallel_data *parallel,int nthread)
 {
 
+  int lab1, lab2;
+  lab1 = 123+nthread;
+  lab2 = 1234+nthread;
   
-  // Send to the up, receive from down
-  MPI_Sendrecv(temperature->data[1], temperature->ny + 2, MPI_DOUBLE,
-	       parallel->nup, 11,
-	       temperature->data[temperature->nx + 1],
-	       temperature->ny + 2, MPI_DOUBLE, parallel->ndown, 11,
-	       MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-  // Send to the down, receive from up
-  MPI_Sendrecv(temperature->data[temperature->nx], temperature->ny + 2,
-	       MPI_DOUBLE, parallel->ndown, 12,
-	       temperature->data[0], temperature->ny + 2, MPI_DOUBLE,
-	       parallel->nup, 12, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    // Send to the up, receive from down
+    MPI_Sendrecv(temperature->data[1], temperature->ny + 2, MPI_DOUBLE,
+                 parallel->nup, lab1,
+                 temperature->data[temperature->nx + 1],
+                 temperature->ny + 2, MPI_DOUBLE, parallel->ndown, lab1,
+                 MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    // Send to the down, receive from up
+    MPI_Sendrecv(temperature->data[temperature->nx], temperature->ny + 2,
+                 MPI_DOUBLE, parallel->ndown, lab2,
+                 temperature->data[0], temperature->ny + 2, MPI_DOUBLE,
+                 parallel->nup, lab2, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 }
 
 
@@ -38,8 +41,7 @@ void evolve(field *curr, field *prev, double a, double dt)
      * are not updated. */
     dx2 = prev->dx * prev->dx;
     dy2 = prev->dy * prev->dy;
-
-#pragma omp parallel for private(i,j)
+#pragma omp for private(i,j)
     for (i = 1; i < curr->nx + 1; i++) {
         for (j = 1; j < curr->ny + 1; j++) {
             curr->data[i][j] = prev->data[i][j] + a * dt *
