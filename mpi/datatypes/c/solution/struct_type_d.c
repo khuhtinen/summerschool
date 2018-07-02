@@ -6,17 +6,18 @@
 
 int main(int argc, char *argv[])
 {
+    typedef struct {
+        float coords[3];
+        int charge;
+        char label[2];
+    } particle;
+
     int n = 1000, cnt = 3, reps = 10000;
     particle particles[n];
     int i, j, myid, ntasks;
     MPI_Aint lb0, lb1, extent;
     double t1, t2;
 
-    typedef struct {
-        float coords[3];
-        int charge;
-        char label[2];
-    } particle;
 
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);

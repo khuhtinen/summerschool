@@ -6,18 +6,20 @@
 
 int main(int argc, char *argv[])
 {
-    int n = 1000, cnt = 3, reps = 10000;
-    particle particles[n];
-    int i, j, myid, ntasks, blocklen[cnt];
-    MPI_Datatype particletype, temptype, types[cnt];
-    MPI_Aint disp[cnt], dist[2], lb, extent;
-    double t1, t2;
 
     typedef struct {
         float coords[3];
         int charge;
         char label[2];
     } particle;
+
+
+    int n = 1000, cnt = 3, reps = 10000;
+    particle particles[n];
+    int i, j, myid, ntasks, blocklen[cnt];
+    MPI_Datatype particletype, temptype, types[cnt];
+    MPI_Aint disp[cnt], dist[2], lb, extent;
+    double t1, t2;
 
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);
