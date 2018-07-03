@@ -46,14 +46,31 @@ int main(int argc, char *argv[])
 
 void single_reader(int my_id, int *localvector, int localsize)
 {
-    FILE *fp;
-    int *fullvector, nread;
-    char *fname = "singlewriter.dat";
+  FILE *fp;
+  int *fullvector, nread;
+  char *fname = "singlewriter.dat";
 
-    /* TODO: Implement a function that will read the data from a file so that
-       a single process does the file io. Use rank WRITER_ID as the io rank */
+  /* TODO: Implement a function that will read the data from a file so that
+     a single process does the file io. Use rank WRITER_ID as the io rank */
 
-    free(fullvector);
+  fullvector = malloc(DATASIZE*sizeof(int));
+  
+  if(my_id == WRITER_ID) {
+    int i=0;
+    fp = fopen("data.txt","r");
+    
+    for(i=0;i<DATASIZE;i++) {
+      fscanf(fp,"%d",&fullvector[i]);
+    }
+    
+    fclose(fp);
+  }
+
+  MPI_Scatter(fullvector, localsize,MPI_INT,
+	      localvector,localsize,MPI_INT,
+	      WRITER_ID,MPI_COMM_WORLD);
+  
+  free(fullvector);
 }
 
 /* Try to avoid this type of pattern when ever possible.
